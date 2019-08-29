@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="./jquery-ui/jquery-ui.css">
+	<script src="./jquery-ui/jquery.js"></script>
+	<script type="text/javascript" src='./jquery-ui/jquery-ui.js'></script>
+	<style type="text/css">
+		*{margin:0;padding:0;}
+		#draggable { width: 200px; height: 100px; position: absolute;left:0px;top:0px;background:#000;}
+		.parts-category { width: 100px; height: 20px; background: #ff0; }
+  		#template { width: 600px; height: 600px; transform: scale(0.6); transform-origin: 0 0; background: #ff0000;;}
+		.header{ height: 85px; background: pink;}
+		.content{ overflow: hidden; position: relative;}
+		.right{margin-left: 200px;}
+		.div{ width: 100px; height: 20px; background: #ff0;}
+	</style>
+</head>
+<body>
+	<div class='header'></div>
+	<div class="content">
+		<div id="draggable" class="customCharts-parts">
+			<div class="parts-category div">1</div>
+			<div class="parts-category div">2</div>
+			<div class="parts-category div">3</div>
+		</div>
+		<div class="right"><div id="template"></div></div>
+		
+	</div>
+	<script type="text/javascript">
+		 $(function() {
+		    $( ".customCharts-parts > div" ).draggable({
+		    	addClasses: false,
+                cursor: "move",
+                helper: 'clone',
+                revert: 'invalid',
+                zIndex: 999
+		    });
+		    $( "#template" ).droppable({
+				accept: ".parts-category",
+				drop: function( event, ui ) {
+					console.log(ui)
+					let curr = $(ui.helper).clone();
+					let left = (ui.position.left-200) / 0.6;
+					let top = ui.position.top / 0.6 + (20 * 0.6)
+					$(curr).css({'left': left + "px", 'top': top + "px"});
+					$(this).append(curr);
+					curr.removeClass('parts-category');
+					$(curr).resizable();
+					$(curr).draggable({
+						addClasses: false,
+                        zIndex: 999,
+						cursor: "move",
+						// drag: function(event,ui) {
+						// 	// 在拖拽的时候改变当前对象防止拖拽的对象和当前对象不一致
+							
+						// 	let left = (ui.position.left-200) / 0.6;
+						// 	let top = ui.position.top / 0.6 + (20 * 0.6)
+						// 	//$(curr).css({'left': left + "px", 'top': top + "px"});
+						// }
+					})
+				}
+		    });
+		  });
+		  $( "#template" ).on('mouseup', function(e){
+			console.log(e.clientX-204)
+			console.log(e.clientY-85)
+		  })
+	</script>
+</body>
+</html>
